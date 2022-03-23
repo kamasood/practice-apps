@@ -1,3 +1,4 @@
+require("dotenv").config(); // do we need this here?
 const mongoose = require("mongoose");
 
 // 1. Use mongoose to establish a connection to MongoDB
