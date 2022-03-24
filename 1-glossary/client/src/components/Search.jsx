@@ -20,14 +20,19 @@ class Search extends React.Component {
   onSubmitSearch(event) {
     event.preventDefault()
     this.props.filterGlossary(this.state.inputSearch);
+    this.setState({
+      inputSearch: ''
+    });
   }
 
   render() {
     return (
-      <form onSubmit={this.onSubmitSearch}>
-        <input type="text" placeholder="Search glossary..." onChange={this.onChangeSearch}></input>
-        <input type="submit" value="Search"></input>
-      </form>
+      <div className="search-container">
+        <form onSubmit={this.onSubmitSearch}>
+          <input type="text" placeholder="Search glossary..." value={this.state.inputSearch} onChange={this.onChangeSearch}></input>
+          <input type="submit" value="Search"></input>
+        </form>
+      </div>
     );
   }
 
