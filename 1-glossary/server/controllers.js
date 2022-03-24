@@ -16,9 +16,9 @@ module.exports.glossary = {
   },
 
   post: (req, res) => {
-    return models.saveWord(req.body.word, req.body.definition) // might have to change these arguments for Axios requests (set up for Postman now)
+    return models.saveWord(req.body.word, req.body.definition)
       .then(() => {
-        res.sendStatus(201); // would we use 202 here?
+        res.sendStatus(201);
       })
       .catch((error) => {
         console.error(error);
