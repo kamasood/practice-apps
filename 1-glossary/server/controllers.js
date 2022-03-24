@@ -6,13 +6,20 @@ const models = require('./models.js');
 module.exports.glossary = {
 
   get: (req, res) => {
-    models.readAll()
-      .then((words) => {
-        res.send(words);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (req.query.page) {
+      models.readAll(req.query.page, req.query.search)
+        .then((words) => {
+          res.send(words);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      models.countAll()
+        .then((count) => {
+          res.send({count})
+        });
+    }
   },
 
   post: (req, res) => {

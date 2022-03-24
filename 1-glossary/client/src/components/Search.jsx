@@ -19,7 +19,9 @@ class Search extends React.Component {
 
   onSubmitSearch(event) {
     event.preventDefault()
-    this.props.filterGlossary(this.state.inputSearch);
+
+    this.props.handleSearch(this.state.inputSearch);
+
     this.setState({
       inputSearch: ''
     });

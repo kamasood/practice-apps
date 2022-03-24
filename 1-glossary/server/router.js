@@ -7,7 +7,7 @@ const router = express.Router();
 
 // define routes
 
-router.get('/glossary', controllers.glossary.get);
+router.get('/glossary?:page', controllers.glossary.get);
 
 router.post('/glossary', controllers.glossary.post);
 

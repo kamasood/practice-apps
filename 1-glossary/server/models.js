@@ -2,8 +2,24 @@
 const db = require('./db.js');
 
 // define models for save
-exports.readAll = () => {
-  return db.Glossary.find({}).sort({ word: 'asc'});
+
+exports.countAll = () => {
+  return db.Glossary.count({});
+}
+
+exports.readAll = (page, search) => {
+  let query = search ? {
+    $or: [
+      { word: `/${search}/` },
+      { definition: `/${search}/` }
+    ]
+    } : {}
+
+  return db.Glossary
+    .find(query)
+    .sort({ word: 'asc'})
+    .skip((page - 1) * 10)
+    .limit(10);
 };
 
 exports.saveWord = (word, definition) => {

@@ -3,6 +3,7 @@ import React from 'react';
 import Form from './Form.jsx';
 import Search from './Search.jsx';
 import List from './List.jsx';
+import PageBar from './PageBar.jsx';
 import library from '../library'
 
 class App extends React.Component {
@@ -11,26 +12,41 @@ class App extends React.Component {
     super(props)
     this.state = {
       glossary: [],
-      searchResult: [],
-      searched: false
+      searched: null,
+      pageNumber: 1,
+      totalPages: 1
     }
+    this.countWords = this.countWords.bind(this);
     this.fetchWords = this.fetchWords.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleReturnHome = this.handleReturnHome.bind(this);
-    this.filterGlossary = this.filterGlossary.bind(this);
+    this.handlePage = this.handlePage.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
     this.fetchWords();
   }
 
-  fetchWords() {
-    library.getGlossary()
+  countWords() {
+    library.countGlossary()
       .then(({data}) => {
         this.setState({
-          glossary: data
+          totalPages: Math.ceil(data.count / 10)
+        });
+      });
+  }
+
+  fetchWords(page = this.state.pageNumber, search = this.state.searched) {
+    this.countWords();
+    library.getGlossary(page, search)
+      .then(({data}) => {
+        this.setState({
+          glossary: data,
+          pageNumber: page,
+          searched: search
         });
       })
       .catch((error) => {
@@ -71,34 +87,37 @@ class App extends React.Component {
       });
   }
 
-  handleReturnHome() {
+  handleReturnHome() { // REFACTOR HERE
     this.setState({
-      searched: false
-    });
+      searched: null,
+    })
+    this.fetchWords(1, null); // this kind of works...
   }
 
-  filterGlossary(query) {
-    const results = this.state.glossary.filter((entry) => {
-      return (entry.word.toLowerCase().includes(query.toLowerCase()) || entry.definition.toLowerCase().includes(query.toLowerCase()));
-    })
-    this.setState({
-      searchResult: results,
-      searched: true
-    })
+  handlePage(page) {
+    if (page < 1 || page > this.state.totalPages) {
+      return;
+    } else {
+      this.fetchWords(page);
+    }
+  }
+
+  handleSearch(search) {
+    this.fetchWords(1, search); // update with search data on page 1
   }
 
   render() {
-    const listWords = this.state.searched === false ? this.state.glossary : this.state.searchResult;
-
     return (
       <div className="components-container">
         <button onClick={this.handleReturnHome}>Home</button>
         <h4>Form Component:</h4>
         <Form handleAdd={this.handleAdd}/>
         <h4>Search Component:</h4>
-        <Search filterGlossary={this.filterGlossary}/>
+        <Search handleSearch={this.handleSearch}/>
+        <h4>Page Bar Component:</h4>
+        <PageBar handlePage= {this.handlePage} pageNumber={this.state.pageNumber} totalPages={this.state.totalPages}/>
         <h4>List Component:</h4>
-        <List words={listWords} onClickDelete={this.handleDelete} onClickEdit={this.handleUpdate}/>
+        <List words={this.state.glossary} onClickDelete={this.handleDelete} onClickEdit={this.handleUpdate}/>
       </div>
     );
   }
