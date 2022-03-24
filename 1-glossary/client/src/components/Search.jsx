@@ -29,8 +29,16 @@ class Search extends React.Component {
     return (
       <div className="search-container">
         <form onSubmit={this.onSubmitSearch}>
-          <input type="text" placeholder="Search glossary..." value={this.state.inputSearch} onChange={this.onChangeSearch}></input>
-          <input type="submit" value="Search"></input>
+          <input
+            type="text"
+            placeholder="Search glossary..."
+            value={this.state.inputSearch}
+            onChange={this.onChangeSearch}>
+          </input>
+          <input
+            type="submit"
+            value="Search">
+          </input>
         </form>
       </div>
     );

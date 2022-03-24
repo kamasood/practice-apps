@@ -11,12 +11,14 @@ class App extends React.Component {
     super(props)
     this.state = {
       glossary: [],
-      displayedWords: []
+      searchResult: [],
+      searched: false
     }
     this.fetchWords = this.fetchWords.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleReturnHome = this.handleReturnHome.bind(this);
     this.filterGlossary = this.filterGlossary.bind(this);
   }
 
@@ -28,8 +30,7 @@ class App extends React.Component {
     library.getGlossary()
       .then(({data}) => {
         this.setState({
-          glossary: data,
-          displayedWords: data
+          glossary: data
         });
       })
       .catch((error) => {
@@ -70,24 +71,34 @@ class App extends React.Component {
       });
   }
 
+  handleReturnHome() {
+    this.setState({
+      searched: false
+    });
+  }
+
   filterGlossary(query) {
-    const results = this.state.glossary.filter(({word}) => {
-      return word.toLowerCase().includes(query.toLowerCase());
+    const results = this.state.glossary.filter((entry) => {
+      return (entry.word.toLowerCase().includes(query.toLowerCase()) || entry.definition.toLowerCase().includes(query.toLowerCase()));
     })
     this.setState({
-      displayedWords: results
+      searchResult: results,
+      searched: true
     })
   }
 
   render() {
+    const listWords = this.state.searched === false ? this.state.glossary : this.state.searchResult;
+
     return (
       <div className="components-container">
+        <button onClick={this.handleReturnHome}>Home</button>
         <h4>Form Component:</h4>
         <Form handleAdd={this.handleAdd}/>
         <h4>Search Component:</h4>
         <Search filterGlossary={this.filterGlossary}/>
         <h4>List Component:</h4>
-        <List words={this.state.displayedWords} onClickDelete={this.handleDelete} onClickEdit={this.handleUpdate}/>
+        <List words={listWords} onClickDelete={this.handleDelete} onClickEdit={this.handleUpdate}/>
       </div>
     );
   }

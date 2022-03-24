@@ -16,7 +16,7 @@ module.exports.glossary = {
   },
 
   post: (req, res) => {
-    return models.saveWord(req.body.word, req.body.definition)
+    models.saveWord(req.body.word, req.body.definition)
       .then(() => {
         res.sendStatus(201);
       })
@@ -26,7 +26,7 @@ module.exports.glossary = {
   },
 
   patch: (req, res) => {
-    return models.updateWord(req.body.word, req.body.definition)
+    models.updateWord(req.body.word, req.body.definition)
       .then(() => {
         res.sendStatus(204);
       })
@@ -36,7 +36,7 @@ module.exports.glossary = {
   },
 
   delete: (req, res) => {
-    return models.deleteWord(req.body.word)
+    models.deleteWord(req.body.word)
       .then(({deletedCount}) => {
         res.send(`Deleted ${deletedCount} words from database`);
       })

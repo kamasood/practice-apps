@@ -11,6 +11,7 @@ class Form extends React.Component {
     this.onChangeWord = this.onChangeWord.bind(this);
     this.onChangeDef = this.onChangeDef.bind(this);
     this.onSubmitAdd = this.onSubmitAdd.bind(this);
+    this.inputWord = React.createRef();
   }
 
   onChangeWord(event) {
@@ -29,26 +30,38 @@ class Form extends React.Component {
     event.preventDefault();
     if (this.state.inputWord === '') {
       alert('Please enter a word!');
-      return;
+    } else {
+      const word = { word: this.state.inputWord, definition: this.state.inputDef };
+      this.props.handleAdd(word);
+      this.setState({
+        inputWord: '',
+        inputDef: ''
+      });
     }
-    const word = {
-      word: this.state.inputWord,
-      definition: this.state.inputDef
-    };
-    this.props.handleAdd(word);
-    this.setState({
-      inputWord: '',
-      inputDef: ''
-    })
+    this.inputWord.current.focus();
   }
 
   render() {
     return (
       <div className="form-container">
         <form onSubmit={this.onSubmitAdd}>
-          <input type="text" placeholder="Input word..." value={this.state.inputWord} onChange={this.onChangeWord}></input>
-          <input type="text" placeholder="Input definition..." value={this.state.inputDef} onChange={this.onChangeDef}></input>
-          <input type="submit" value="Add/Update"></input>
+          <input
+            type="text"
+            ref={this.inputWord}
+            placeholder="Input word..."
+            value={this.state.inputWord}
+            onChange={this.onChangeWord}>
+          </input>
+          <input
+            type="text"
+            placeholder="Input definition..."
+            value={this.state.inputDef}
+            onChange={this.onChangeDef}>
+          </input>
+          <input
+            type="submit"
+            value="Add/Update">
+          </input>
         </form>
       </div>
     );
