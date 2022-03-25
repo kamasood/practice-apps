@@ -4,16 +4,13 @@ const PORT = 3000; // do we need to hide this?
 
 const url = `http://localhost:${PORT}/glossary`;
 
-const countGlossary = () => (
-  axios.get(url)
+const countGlossary = (search) => (
+  axios.get(url, { params: { search } })
 );
 
-const getGlossary = (page, search) => {
-  console.log('page', page);
-  console.log('search', search);
-
-  return axios.get(url, { params: { page, search } });
-};
+const getGlossary = (page, search) => (
+  axios.get(url, { params: { page, search } })
+);
 
 const addToGlossary = (word) => (
   axios.post(url, word)

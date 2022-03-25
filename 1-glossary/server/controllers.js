@@ -15,7 +15,7 @@ module.exports.glossary = {
           console.error(error);
         });
     } else {
-      models.countAll()
+      models.countAll(req.query.search)
         .then((count) => {
           res.send({count})
         });

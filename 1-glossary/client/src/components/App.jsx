@@ -30,8 +30,8 @@ class App extends React.Component {
     this.fetchWords();
   }
 
-  countWords() {
-    library.countGlossary()
+  countWords(search) {
+    library.countGlossary(search)
       .then(({data}) => {
         this.setState({
           totalPages: Math.ceil(data.count / 10)
@@ -40,7 +40,7 @@ class App extends React.Component {
   }
 
   fetchWords(page = this.state.pageNumber, search = this.state.searched) {
-    this.countWords();
+    this.countWords(search);
     library.getGlossary(page, search)
       .then(({data}) => {
         this.setState({
@@ -87,7 +87,7 @@ class App extends React.Component {
       });
   }
 
-  handleReturnHome() { // REFACTOR HERE
+  handleReturnHome() {
     this.setState({
       searched: null,
     })
@@ -103,7 +103,7 @@ class App extends React.Component {
   }
 
   handleSearch(search) {
-    this.fetchWords(1, search); // update with search data on page 1
+    this.fetchWords(1, search);
   }
 
   render() {
