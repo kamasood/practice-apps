@@ -5,10 +5,10 @@ import App from './components/App.jsx';
 
 render(
   <div>
-    <p>Hello, World!</p>
+    {/* <p>Hello, World!</p>
     <p>
       <code>Page Cookie: {JSON.stringify(document.cookie, undefined, "\t")}</code>
-    </p>
+    </p> */}
     <App />
   </div>,
   document.getElementById("root")

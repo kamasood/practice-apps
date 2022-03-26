@@ -9,9 +9,12 @@ router.get('/checkout', (req, res) => {
 
   db.readData(req.session_id)
     .then(([rows]) => {
-      res.json(rows);
+      res.json(rows[0]);
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(404);
+    });
 
 });
 
@@ -20,17 +23,20 @@ router.post('/checkout', (req, res) => {
   if (Object.keys(req.body).length === 0) { // create session, find a better way
     db.createSession(req.session_id)
       .then(() => {
-        res.sendStatus(201);
+        res.status(201).send('User session created');
       })
       .catch(err => {
-        res.sendStatus(409); // session has already been created in db
+        res.status(200).send('Retrieving existing session data');
       });
   } else { // update existing session entry
     db.postData(req.session_id, req.body)
       .then(() => {
         res.sendStatus(201);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.error(err);
+        res.status(500).send('The server encountered an error');
+      });
   }
 
 });

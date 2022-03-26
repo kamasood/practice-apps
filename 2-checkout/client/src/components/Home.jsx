@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Home(props) {
+function Home({handleClick}) {
   return (
     <div>
-      <button>Checkout</button>
+      <button onClick={() => handleClick()}>Checkout</button>
     </div>
   );
-}
+};
 
 export default Home;

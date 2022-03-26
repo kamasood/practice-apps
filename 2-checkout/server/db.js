@@ -14,9 +14,6 @@ const db = Promise.promisifyAll(connection, { multiArgs: true });
 db.connectAsync()
   .then(() => console.log(`Connected to MySQL as id: ${db.threadId}`))
   .then(() =>
-    db.queryAsync('CREATE DATABASE IF NOT EXISTS checkout') // create database
-  )
-  .then(() =>
     // Expand this table definition as needed:
     db.queryAsync(
       `CREATE TABLE IF NOT EXISTS responses (
@@ -28,16 +25,16 @@ db.connectAsync()
         address_one VARCHAR(60),
         address_two VARCHAR(60),
         city VARCHAR(24),
-        state CHAR(2),
-        zipcode INT(5),
-        phone INT(10),
-        credit_card INT(16),
-        expiration INT(6),
-        cvv INT(3),
-        billing_zip INT(5)
+        state VARCHAR(10),
+        zipcode VARCHAR(5),
+        phone VARCHAR(15),
+        credit_card VARCHAR(16),
+        expiration VARCHAR(10),
+        cvv VARCHAR(5),
+        billing_zip VARCHAR(5)
       )`
     )
   )
-  .catch((err) => console.log(err));
+  .catch((err) => console.error(err));
 
 module.exports = db;

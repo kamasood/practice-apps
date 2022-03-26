@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
 import Home from './Home.jsx';
 import User from './User.jsx';
 import Shipping from './Shipping.jsx';
@@ -10,34 +11,49 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      session_id: null, // do we even need this?
-      userInfo: null,
+      user: null,
       currentForm: 'home'
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
+  fetchUserData() {
+    return axios.get('http://localhost:3000/checkout')
+      .catch(err => console.error(err));
+  }
 
+  handleClick(user_data) {
+    const pages = ['home', 'user', 'shipping', 'billing', 'summary', 'home'];
+    let nextPage = pages[pages.indexOf(this.state.currentForm) + 1];
+
+    axios.post('http://localhost:3000/checkout', user_data)
+      .then(() => {
+        return this.fetchUserData();
+      })
+      .then(({data}) => {
+        this.setState({
+          currentForm: nextPage,
+          user: data
+        });
+      })
+      .catch(err => console.error(err));
+  }
 
   render() {
     let page;
     switch (this.state.currentForm) {
       case 'home':
-        page = <Home />;
-        break;
+        return page = <Home handleClick={this.handleClick} />;
       case 'user':
-        page = <User />;
-        break;
+        return page = <User user={this.state.user} handleClick={this.handleClick}/>;
       case 'shipping':
-        page = <Shipping />;
-        break;
+        return page = <Shipping user={this.state.user} handleClick={this.handleClick}/>;
       case 'billing':
-        page = <Billing />;
-        break;
+        return page = <Billing user={this.state.user} handleClick={this.handleClick}/>;
       case 'summary':
-        page = <Summary />;
-        break;
+        return page = <Summary user={this.state.user} handleClick={this.handleClick}/>;
       default:
-        page = <Home />;
+        return page = <Home handleClick={this.handleClick}/>;
     }
 
     return (
