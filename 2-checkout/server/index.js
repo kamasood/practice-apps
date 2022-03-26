@@ -4,6 +4,9 @@ const path = require("path");
 const sessionHandler = require("./middleware/session-handler");
 const logger = require("./middleware/logger");
 
+// Added connections
+const router = require('./router');
+
 // Establishes connection to the database on server start
 const db = require("./db");
 
@@ -19,13 +22,11 @@ app.use(logger);
 // Serves up all static and generated assets in ../client/dist.
 app.use(express.static(path.join(__dirname, "../client/dist")));
 
-/**** 
- * 
- * 
- * Other routes here....
- *
- * 
- */
+// JSON
+app.use(express.json());
+
+// Router
+app.use(router);
 
 app.listen(process.env.PORT);
 console.log(`Listening at http://localhost:${process.env.PORT}`);
